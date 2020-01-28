@@ -266,7 +266,7 @@
 #' @importFrom S4Vectors DataFrame metadata<-
 #' @importFrom methods as
 #' @importFrom scater .bpNotSharedOrUp
-fastMNN <- function(..., batch=NULL, k=20, prop.k=NULL, restrict=NULL, cos.norm=TRUE, ndist=3, d=50, weights=NULL,
+fastMNN <- function(...,PCA=embedding, batch=NULL, k=20, prop.k=NULL, restrict=NULL, cos.norm=TRUE, ndist=3, d=50, weights=NULL,
     merge.order=NULL, auto.merge=FALSE, min.batch.skip=0,
     subset.row=NULL, correct.all=FALSE, assay.type="logcounts", 
     BSPARAM=IrlbaParam(deferred=TRUE), BNPARAM=KmknnParam(), BPPARAM=SerialParam()) 
@@ -332,8 +332,7 @@ fastMNN <- function(..., batch=NULL, k=20, prop.k=NULL, restrict=NULL, cos.norm=
         batch.list <- mapply(FUN=.apply_cosine_norm, batch.list, all.l2s, SIMPLIFY=FALSE) 
     }
 
-    pc.mat <- .multi_pca_list(batch.list, d=d, weights=weights, subset.row=subset.row,
-        get.all.genes=correct.all, BSPARAM=BSPARAM, BPPARAM=BPPARAM)
+    pc.mat <- PCA
 
     out <- .fast_mnn(batches=pc.mat, ..., BPPARAM=BPPARAM)
     .convert_to_SCE(out, pc.mat)
